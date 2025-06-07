@@ -1,0 +1,76 @@
+@import "./reset.css";
+@import "../fonts/Play/stylesheets.css";
+@import "../fonts/DeathStar/stylesheets.css";
+
+:root {
+    --white: white;
+    --black: black;
+    --orange: #F1C837;
+}
+
+html {
+    font-size: 20px;
+}
+
+h1 {
+    font-size: 3rem;
+    line-height: 3rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+}
+
+h3,
+p {
+    font-size: 1rem;
+    line-height: 1rem;
+}
+
+body {
+    background: url("../img/starsBg.png") center / cover repeat-y;
+}
+
+.header {
+    width: 100%;
+    max-width: 1000px;
+    height: 70dvh;
+
+    margin-inline: auto;
+    padding: 25px;
+    text-align: center;
+
+    perspective: 7rem;
+    /* perspective-origin: 100%; */
+
+    overflow: hidden;
+}
+
+.header__title {
+    font-family: 'Death Star', sans-serif;
+    color: white;
+    margin-bottom: 22px;
+}
+
+.header__text {
+    transform: rotateX(45deg);
+}
+
+.header__moving-part {
+    font-family: 'Play', sans-serif;
+    font-size: 2rem;
+    line-height: 4rem;
+    color: var(--orange);
+    animation: move-text 25s linear 0s infinite;
+}
+
+@keyframes move-text {
+    from {
+        transform: translateY(50%);
+    }
+
+    to {
+        transform: translateY(-120%);
+    }
+}
