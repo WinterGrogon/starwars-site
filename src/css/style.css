@@ -10,6 +10,7 @@
     --red: #FF3333;
     --pink: #FF7676;
 
+    --index: calc(1dvw + 1dvh);
     --grid-gap: 20px;
 }
 
@@ -71,11 +72,22 @@ body {
     animation: move-text 25s linear 0s infinite;
 }
 
+/* Секция карточки */
 .card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    row-gap: calc(var(--grid-gap) * 2);
+    justify-content: center;
+    row-gap: clamp(10px, var(--index), 20px);
+    
+    width: 100%;
+    max-width: 1000px;
+    
+    margin-inline: auto;
+    padding-block: clamp(10px, var(--index), 20px);
+    text-align: center;
+    
+    perspective: 33rem;
 }
 
 .card__title {
@@ -86,6 +98,7 @@ body {
     display: none;
 }
 
+/* Переключатель */
 .card__switch:checked~.card__switch-label {
     box-shadow: 0px 0px 30px 0px var(--red);
     background-color: var(--black);
@@ -108,14 +121,14 @@ body {
     justify-content: center;
     align-items: center;
 
-    width: 300px;
-    height: 60px;
+    width: clamp(150px, calc(var(--index) * 15), 300px);
+    aspect-ratio: 300 / 60;
 
     color: var(--white);
     background-color: var(--cyan);
     font-family: "Death Star";
 
-    border-radius: 20px;
+    border-radius: clamp(10px, var(--index), 20px);
     box-shadow: 0px 0px 30px 0px var(--cyan);
     text-transform: uppercase;
     user-select: none;
@@ -128,36 +141,25 @@ body {
     }
 }
 
-/* Карточки */
-.card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    width: 100%;
-    max-width: 1000px;
-
-    margin-inline: auto;
-    text-align: center;
-
-    perspective: 33rem;
-
-}
-
+/* Содержимое карточки */
 .card__content.content {
-    max-width: 100%;
-    height: 85dvh;
-    aspect-ratio: 1045 / 1145;
+    --width: 90dvw;
+    --height: 80dvh;
+    --aspect-ratio: 1045 / 1145;
+
+    /* Ширина карточки: не больше 90% ширины окна и не больше, чем 80% высоты окна, умноженной на соотношение сторон (чтобы карточка всегда помещалась на экране) */
+    width: min(var(--width), var(--height) * calc(var(--aspect-ratio)));
+
+    /* Высота карточки: не больше 80% высоты окна и не больше, чем 90% ширины окна, делённой на соотношение сторон (чтобы карточка всегда помещалась на экране) */
+    height: min(var(--height), var(--width) / calc(var(--aspect-ratio)));
+
+    /* Фиксированное соотношение сторон карточки (ширина к высоте) */
+    aspect-ratio: var(--aspect-ratio);
 
     margin-inline: auto;
-
-    container-name: card-content;
-    container-type: size;
-
     transform-style: preserve-3d;
 
     position: relative;
-
     transition: transform .2s ease;
 
     &>.content__jedi,
@@ -313,6 +315,7 @@ body {
     }
 }
 
+/* Keyframes */
 @keyframes move-text {
     from {
         transform: translateY(50%);
@@ -320,100 +323,5 @@ body {
 
     to {
         transform: translateY(-120%);
-    }
-}
-
-@container card-content (width < 900px) {
-    .card__content.content .content__info {
-        top: auto;
-        bottom: var(--grid-gap);
-    }
-}
-
-@container card-content (width < 750px) {
-    .card__content.content .content__planet {
-        row-gap: var(--grid-gap);
-
-        &>h3 {
-            font-size: 20px;
-        }
-
-        &>p {
-            font-size: 15px;
-        }
-    }
-
-    .card__content.content .content__info {
-        row-gap: var(--grid-gap);
-
-        &>h3 {
-            font-size: 20px;
-        }
-
-        &>.content__wrapper {
-
-            &>h4 {
-                font-size: 15px;
-            }
-
-            &>p {
-                font-size: 12px;
-            }
-        }
-    }
-}
-
-@container card-content (width < 650px) {
-
-    .card__content.content .content__info,
-    .card__content.content .content__planet {
-        padding-bottom: 20px;
-    }
-}
-
-@container card-content (height < 800px) {
-    .card__content.content .content__info {
-        bottom: var(--grid-gap);
-        width: calc(100% - (var(--grid-gap) * 2));
-    }
-}
-
-@container card-content (width < 750px) {
-    .card__content.content {
-        max-width: auto;
-        height: auto;
-        aspect-ratio: auto;
-
-        &>.content__jedi,
-        &>.content__sith {
-            max-width: 100%;
-            height: 85dvh;
-            aspect-ratio: 1045 / 1145;
-        }
-
-
-        &:has(.content__jedi) {
-            background-color: var(--cyan);
-        }
-
-        &:has(.content__sith) {
-            background-color: var(--pink);
-        }
-    }
-
-    .card__content.content .content__info {
-        width: calc(100% - (var(--grid-gap) * 2));
-        bottom: auto;
-        top: calc(100% + var(--grid-gap));
-        position: relative;
-    }
-}
-
-@media screen and (max-width: 1000px) and (max-aspect-ratio: 860/1200) {
-    .card__content.content {
-        height: auto;
-        max-width: auto;
-
-        width: 100%;
     }
 }
