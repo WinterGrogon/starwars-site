@@ -147,6 +147,10 @@ body {
     --width: 90dvw;
     --height: 80dvh;
     --aspect-ratio: 1045 / 1145;
+    
+    --card-gap: min(var(--grid-gap), calc(var(--container-index) * 0.8));
+    --card-radius: clamp(10px, var(--container-index), 30px);
+    --card-child-radius: clamp(5px, calc(var(--container-index) * 0.8), 20px);
 
     /* 
         Ширина карточки: не больше заданной ширины окна (--width) 
@@ -176,9 +180,9 @@ body {
     /* Общие стили для обоих контейнеров */
     &>.content__jedi,
     &>.content__sith {
-        padding: min(var(--grid-gap), calc(var(--container-index) * 0.8));
+        padding: var(--card-gap);
 
-        border-radius: clamp(10px, var(--container-index), 30px);
+        border-radius: var(--card-radius);
         backface-visibility: hidden;
 
         position: absolute;
@@ -247,7 +251,7 @@ body {
 
         padding: var(--padding) var(--padding) calc(var(--padding) * 1.2);
 
-        border-radius: clamp(5px, calc(var(--container-index) * 0.8), 20px);
+        border-radius: var(--card-child-radius);
 
         &>h3 {
             font-size: clamp(13px, calc(var(--container-index) * 1.4), 30px);
@@ -269,8 +273,8 @@ body {
     & .content__icon {
         width: calc(200 / 1045 * 100%);
 
-        top: min(var(--grid-gap), calc(var(--container-index) * 0.8));
-        left: min(var(--grid-gap), calc(var(--container-index) * 0.8));
+        top: var(--card-gap);
+        left: var(--card-gap);
     }
 
     & .content__planet {
@@ -279,8 +283,8 @@ body {
 
         width: calc(400 / 1045 * 100%);
 
-        top: min(var(--grid-gap), calc(var(--container-index) * 0.8));
-        right: min(var(--grid-gap), calc(var(--container-index) * 0.8));
+        top: var(--card-gap);
+        right: var(--card-gap);
 
         &>img {
             width: calc(287 / 400 * 100%);
@@ -294,8 +298,8 @@ body {
 
         text-align: left;
 
-        bottom: min(var(--grid-gap), calc(var(--container-index) * 0.8));
-        left: min(var(--grid-gap), calc(var(--container-index) * 0.8));
+        bottom: var(--card-gap);
+        left: var(--card-gap);
     }
 
     .content__wrapper {
