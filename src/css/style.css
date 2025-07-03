@@ -10,6 +10,8 @@
     --red: #FF3333;
     --pink: #FF7676;
 
+    --index: calc(1dvw + 1dvh);
+    --container-index: calc(1cqw + 1cqh);
     --grid-gap: 20px;
 }
 
@@ -71,11 +73,22 @@ body {
     animation: move-text 25s linear 0s infinite;
 }
 
+/* Секция карточки */
 .card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    row-gap: calc(var(--grid-gap) * 2);
+    justify-content: center;
+    row-gap: clamp(10px, var(--index), 20px);
+
+    width: 100%;
+    max-width: 1000px;
+
+    margin-inline: auto;
+    padding-block: clamp(10px, var(--index), 20px);
+    text-align: center;
+
+    perspective: 33rem;
 }
 
 .card__title {
@@ -86,6 +99,7 @@ body {
     display: none;
 }
 
+/* Переключатель */
 .card__switch:checked~.card__switch-label {
     box-shadow: 0px 0px 30px 0px var(--red);
     background-color: var(--black);
@@ -108,14 +122,14 @@ body {
     justify-content: center;
     align-items: center;
 
-    width: 300px;
-    height: 60px;
+    width: clamp(150px, calc(var(--index) * 15), 300px);
+    aspect-ratio: 300 / 60;
 
     color: var(--white);
     background-color: var(--cyan);
     font-family: "Death Star";
 
-    border-radius: 20px;
+    border-radius: clamp(10px, var(--index), 20px);
     box-shadow: 0px 0px 30px 0px var(--cyan);
     text-transform: uppercase;
     user-select: none;
@@ -128,76 +142,77 @@ body {
     }
 }
 
-/* Карточки */
-.card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    width: 100%;
-    max-width: 1000px;
-
-    margin-inline: auto;
-    text-align: center;
-
-    perspective: 33rem;
-
-}
-
+/* Содержимое карточки */
 .card__content.content {
-    max-width: 100%;
-    height: 85dvh;
-    aspect-ratio: 1045 / 1145;
+    --width: 90dvw;
+    --height: 80dvh;
+    --aspect-ratio: 1045 / 1145;
+    
+    --card-gap: min(var(--grid-gap), calc(var(--container-index) * 0.8));
+    --card-radius: clamp(10px, var(--container-index), 30px);
+    --card-child-radius: clamp(5px, calc(var(--container-index) * 0.8), 20px);
 
-    margin-inline: auto;
+    /* 
+        Ширина карточки: не больше заданной ширины окна (--width) 
+        и не больше, чем заданная высота окна (--height), 
+        умноженной на соотношение сторон (--aspect-ratio)
+        (чтобы карточка всегда помещалась на экране) 
+    */
+    width: min(var(--width), var(--height) * calc(var(--aspect-ratio)));
+
+    /* 
+        Высота карточки: не больше заданной высоты окна (--height) 
+        и не больше, чем заданная ширина окна (--width), 
+        делённая на соотношение сторон (--aspect-ratio)
+        (чтобы карточка всегда помещалась на экране) 
+    */
+    height: min(var(--height), var(--width) / calc(var(--aspect-ratio)));
 
     container-name: card-content;
     container-type: size;
 
+    margin-inline: auto;
     transform-style: preserve-3d;
 
     position: relative;
-
     transition: transform .2s ease;
 
+    /* Общие стили для обоих контейнеров */
     &>.content__jedi,
     &>.content__sith {
-        width: 100%;
-        height: 100%;
+        padding: var(--card-gap);
 
-        border-radius: 30px;
+        border-radius: var(--card-radius);
         backface-visibility: hidden;
 
         position: absolute;
-        top: 0;
-        left: 0;
+        inset: 0;
     }
 
+    /* Стили для контейнера джедая */
     &>.content__jedi {
         background: url("../img/obiwan.png") center / cover no-repeat;
 
         &>.content__planet,
         &>.content__info {
             background-color: var(--white);
-
-            &>h3 {
-                color: var(--cyan);
-            }
-
-            & p {
-                color: var(--black);
-            }
         }
 
-        & .content__wrapper>h4 {
+        & h3,
+        & h4 {
             color: var(--cyan);
+        }
 
-            &::after {
-                background-color: var(--cyan);
-            }
+        & p {
+            color: var(--black);
+        }
+
+        & .content__wrapper>h4::after {
+            background-color: var(--cyan);
         }
     }
 
+    /* Стили для контейнера ситха */
     &>.content__sith {
         background: url("../img/darthwaider.png") center / cover no-repeat;
         transform: rotateY(180deg);
@@ -205,22 +220,19 @@ body {
         &>.content__planet,
         &>.content__info {
             background-color: var(--black);
-
-            &>h3 {
-                color: var(--pink);
-            }
-
-            & p {
-                color: var(--white);
-            }
         }
 
-        & .content__wrapper>h4 {
+        & h3,
+        & h4 {
             color: var(--pink);
+        }
 
-            &::after {
-                background-color: var(--pink);
-            }
+        & p {
+            color: var(--white);
+        }
+
+        & .content__wrapper>h4::after {
+            background-color: var(--pink);
         }
     }
 
@@ -232,39 +244,47 @@ body {
 
     & .content__planet,
     & .content__info {
+        --padding: calc(var(--container-index) * 1);
+
         display: flex;
         flex-direction: column;
 
-        padding: 20px 20px 40px;
+        padding: var(--padding) var(--padding) calc(var(--padding) * 1.2);
 
-        border-radius: 20px;
+        border-radius: var(--card-child-radius);
 
         &>h3 {
-            font-size: 30px;
+            font-size: clamp(13px, calc(var(--container-index) * 1.4), 30px);
             font-weight: 700;
         }
 
-        &>p {
-            font-size: 20px;
+        & h4 {
+            font-size: clamp(10px, calc(var(--container-index) * 1.2), 20px);
+            font-weight: 700;
+        }
+
+        & p {
+            font-size: clamp(10px, calc(var(--container-index) * 1.2), 20px);
             font-weight: 400;
+            line-height: 1.1;
         }
     }
 
     & .content__icon {
         width: calc(200 / 1045 * 100%);
 
-        top: var(--grid-gap);
-        left: var(--grid-gap);
+        top: var(--card-gap);
+        left: var(--card-gap);
     }
 
     & .content__planet {
         align-items: center;
-        row-gap: calc(var(--grid-gap) * 2);
+        row-gap: calc(var(--container-index) * 1);
 
         width: calc(400 / 1045 * 100%);
 
-        top: var(--grid-gap);
-        right: var(--grid-gap);
+        top: var(--card-gap);
+        right: var(--card-gap);
 
         &>img {
             width: calc(287 / 400 * 100%);
@@ -272,47 +292,40 @@ body {
     }
 
     & .content__info {
-        row-gap: calc(var(--grid-gap) * 2);
+        row-gap: calc(var(--container-index) * 1);
 
         width: calc(472 / 1045 * 100%);
 
         text-align: left;
 
-        top: 40%;
-        left: var(--grid-gap);
+        bottom: var(--card-gap);
+        left: var(--card-gap);
+    }
 
-        &>.content__wrapper {
+    .content__wrapper {
 
-            &>h4 {
-                --margin: calc(var(--grid-gap) / 2);
+        &>h4 {
+            --margin: calc(var(--container-index) * 0.5);
 
-                font-size: 20px;
-                font-weight: 700;
+            margin-bottom: var(--margin);
 
-                margin-bottom: var(--margin);
+            &::after {
+                content: "";
 
-                &::after {
-                    content: "";
+                display: block;
 
-                    display: block;
+                width: 70%;
+                height: min(calc(var(--container-index) * 0.2), 4px);
 
-                    width: 70%;
-                    height: 4px;
+                margin-top: var(--margin);
 
-                    margin-top: var(--margin);
-
-                    border: none;
-                }
-            }
-
-            &>p {
-                font-size: 20px;
-                font-weight: 400;
+                border: none;
             }
         }
     }
 }
 
+/* Keyframes */
 @keyframes move-text {
     from {
         transform: translateY(50%);
@@ -323,97 +336,39 @@ body {
     }
 }
 
-@container card-content (width < 900px) {
-    .card__content.content .content__info {
-        top: auto;
-        bottom: var(--grid-gap);
-    }
-}
-
-@container card-content (width < 750px) {
-    .card__content.content .content__planet {
-        row-gap: var(--grid-gap);
-
-        &>h3 {
-            font-size: 20px;
-        }
-
-        &>p {
-            font-size: 15px;
-        }
+@container card-content (max-width: 500px) {
+    /* Отключает взаимодействие с .content__sith, чтобы работал скролл у jedi */
+    .card__switch:not(:checked) ~ .card__content.content > .content__sith {
+        pointer-events: none;
     }
 
-    .card__content.content .content__info {
-        row-gap: var(--grid-gap);
-
-        &>h3 {
-            font-size: 20px;
-        }
-
-        &>.content__wrapper {
-
-            &>h4 {
-                font-size: 15px;
-            }
-
-            &>p {
-                font-size: 12px;
-            }
-        }
-    }
-}
-
-@container card-content (width < 650px) {
-
-    .card__content.content .content__info,
-    .card__content.content .content__planet {
-        padding-bottom: 20px;
-    }
-}
-
-@container card-content (height < 800px) {
-    .card__content.content .content__info {
-        bottom: var(--grid-gap);
-        width: calc(100% - (var(--grid-gap) * 2));
-    }
-}
-
-@container card-content (width < 750px) {
     .card__content.content {
-        max-width: auto;
-        height: auto;
-        aspect-ratio: auto;
 
         &>.content__jedi,
         &>.content__sith {
-            max-width: 100%;
-            height: 85dvh;
-            aspect-ratio: 1045 / 1145;
+            display: flex;
+            justify-content: space-between;
+            align-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: min(var(--grid-gap), calc(var(--container-index) * 0.8));
+            overflow: hidden;
         }
 
-
-        &:has(.content__jedi) {
-            background-color: var(--cyan);
+        & .content__icon,
+        & .content__planet,
+        & .content__info {
+            position: static;
         }
 
-        &:has(.content__sith) {
-            background-color: var(--pink);
+        & .content__info {
+            width: 100%;
+            height: 50cqh;
+            overflow-y: scroll;
         }
-    }
 
-    .card__content.content .content__info {
-        width: calc(100% - (var(--grid-gap) * 2));
-        bottom: auto;
-        top: calc(100% + var(--grid-gap));
-        position: relative;
-    }
-}
-
-@media screen and (max-width: 1000px) and (max-aspect-ratio: 860/1200) {
-    .card__content.content {
-        height: auto;
-        max-width: auto;
-
-        width: 100%;
+        & .content__planet {
+            flex-shrink: 1;
+        }    
     }
 }
