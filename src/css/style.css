@@ -11,6 +11,7 @@
     --pink: #FF7676;
 
     --index: calc(1dvw + 1dvh);
+    --container-index: calc(1cqw + 1cqh);
     --grid-gap: 20px;
 }
 
@@ -147,14 +148,24 @@ body {
     --height: 80dvh;
     --aspect-ratio: 1045 / 1145;
 
-    /* Ширина карточки: не больше 90% ширины окна и не больше, чем 80% высоты окна, умноженной на соотношение сторон (чтобы карточка всегда помещалась на экране) */
+    /* 
+        Ширина карточки: не больше заданной ширины окна (--width) 
+        и не больше, чем заданная высота окна (--height), 
+        умноженной на соотношение сторон (--aspect-ratio)
+        (чтобы карточка всегда помещалась на экране) 
+    */
     width: min(var(--width), var(--height) * calc(var(--aspect-ratio)));
 
-    /* Высота карточки: не больше 80% высоты окна и не больше, чем 90% ширины окна, делённой на соотношение сторон (чтобы карточка всегда помещалась на экране) */
+    /* 
+        Высота карточки: не больше заданной высоты окна (--height) 
+        и не больше, чем заданная ширина окна (--width), 
+        делённая на соотношение сторон (--aspect-ratio)
+        (чтобы карточка всегда помещалась на экране) 
+    */
     height: min(var(--height), var(--width) / calc(var(--aspect-ratio)));
 
-    /* Фиксированное соотношение сторон карточки (ширина к высоте) */
-    aspect-ratio: var(--aspect-ratio);
+    container-name: card-content;
+    container-type: size;
 
     margin-inline: auto;
     transform-style: preserve-3d;
@@ -165,7 +176,9 @@ body {
     /* Общие стили для обоих контейнеров */
     &>.content__jedi,
     &>.content__sith {
-        border-radius: clamp(10px, var(--index), 30px);
+        padding: min(var(--grid-gap), calc(var(--container-index) * 0.8));
+
+        border-radius: clamp(10px, var(--container-index), 30px);
         backface-visibility: hidden;
 
         position: absolute;
@@ -227,44 +240,47 @@ body {
 
     & .content__planet,
     & .content__info {
+        --padding: calc(var(--container-index) * 1);
+
         display: flex;
         flex-direction: column;
 
-        padding: 20px 20px 40px;
+        padding: var(--padding) var(--padding) calc(var(--padding) * 1.2);
 
-        border-radius: 20px;
+        border-radius: clamp(5px, calc(var(--container-index) * 0.8), 20px);
 
         &>h3 {
-            font-size: 30px;
+            font-size: clamp(13px, calc(var(--container-index) * 1.4), 30px);
             font-weight: 700;
         }
 
         & h4 {
-            font-size: 20px;
+            font-size: clamp(10px, calc(var(--container-index) * 1.2), 20px);
             font-weight: 700;
         }
 
         & p {
-            font-size: 20px;
+            font-size: clamp(10px, calc(var(--container-index) * 1.2), 20px);
             font-weight: 400;
+            line-height: 1.1;
         }
     }
 
     & .content__icon {
         width: calc(200 / 1045 * 100%);
 
-        top: var(--grid-gap);
-        left: var(--grid-gap);
+        top: min(var(--grid-gap), calc(var(--container-index) * 0.8));
+        left: min(var(--grid-gap), calc(var(--container-index) * 0.8));
     }
 
     & .content__planet {
         align-items: center;
-        row-gap: calc(var(--grid-gap) * 2);
+        row-gap: calc(var(--container-index) * 1);
 
         width: calc(400 / 1045 * 100%);
 
-        top: var(--grid-gap);
-        right: var(--grid-gap);
+        top: min(var(--grid-gap), calc(var(--container-index) * 0.8));
+        right: min(var(--grid-gap), calc(var(--container-index) * 0.8));
 
         &>img {
             width: calc(287 / 400 * 100%);
@@ -272,20 +288,20 @@ body {
     }
 
     & .content__info {
-        row-gap: calc(var(--grid-gap) * 2);
+        row-gap: calc(var(--container-index) * 1);
 
         width: calc(472 / 1045 * 100%);
 
         text-align: left;
 
-        bottom: var(--grid-gap);
-        left: var(--grid-gap);
+        bottom: min(var(--grid-gap), calc(var(--container-index) * 0.8));
+        left: min(var(--grid-gap), calc(var(--container-index) * 0.8));
     }
 
     .content__wrapper {
 
         &>h4 {
-            --margin: calc(var(--grid-gap) / 2);
+            --margin: calc(var(--container-index) * 0.5);
 
             margin-bottom: var(--margin);
 
@@ -295,7 +311,7 @@ body {
                 display: block;
 
                 width: 70%;
-                height: 4px;
+                height: min(calc(var(--container-index) * 0.2), 4px);
 
                 margin-top: var(--margin);
 
@@ -313,5 +329,29 @@ body {
 
     to {
         transform: translateY(-120%);
+    }
+}
+
+@container card-content (max-width: 500px) {
+    .card__content.content {
+
+        &>.content__jedi,
+        &>.content__sith {
+            display: flex;
+            justify-content: space-between;
+            align-content: space-between;
+            flex-wrap: wrap;
+            gap: min(var(--grid-gap), calc(var(--container-index) * 0.8));
+        }
+
+        & .content__icon,
+        & .content__planet,
+        & .content__info {
+            position: static;
+        }
+
+        & .content__info {
+            width: 100%;
+        }
     }
 }
