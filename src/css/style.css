@@ -147,7 +147,7 @@ body {
     --width: 90dvw;
     --height: 80dvh;
     --aspect-ratio: 1045 / 1145;
-    
+
     --card-gap: min(var(--grid-gap), calc(var(--container-index) * 0.8));
     --card-radius: clamp(10px, var(--container-index), 30px);
     --card-child-radius: clamp(5px, calc(var(--container-index) * 0.8), 20px);
@@ -170,6 +170,8 @@ body {
 
     container-name: card-content;
     container-type: size;
+
+    /* container: card-content / size; */
 
     margin-inline: auto;
     transform-style: preserve-3d;
@@ -337,8 +339,9 @@ body {
 }
 
 @container card-content (max-width: 500px) {
+
     /* Отключает взаимодействие с .content__sith, чтобы работал скролл у jedi */
-    .card__switch:not(:checked) ~ .card__content.content > .content__sith {
+    .card__switch:not(:checked)~.card__content.content>.content__sith {
         pointer-events: none;
     }
 
@@ -369,6 +372,41 @@ body {
 
         & .content__planet {
             flex-shrink: 1;
-        }    
+        }
+    }
+}
+
+@container card-content (min-width: 501px) {
+    .card__content.content {
+
+        &>.content__jedi,
+        &>.content__sith {
+            overflow: hidden;
+
+            &>* {
+                transition: transform .2s ease;
+            }
+
+            &:hover {
+
+                & .content__planet {
+                    transform: rotate(0);
+                }
+
+                & .content__info {
+                    transform: scale(1);
+                }
+            }
+        }
+
+        & .content__planet {
+            transform: translateY(-5cqw) rotate(90deg);
+            transform-origin: top right;
+        }
+
+        & .content__info {
+            transform: scale(0);
+            transform-origin: bottom left;
+        }
     }
 }
